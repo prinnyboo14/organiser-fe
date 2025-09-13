@@ -24,3 +24,21 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.rbc-toolbar button {
+  all: unset;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  transition: background 0.2s;
+}
+
+.rbc-toolbar button:hover {
+  background-color: #f0f0f0;
+}
+
+.rbc-toolbar .rbc-btn-group button + button {
+  margin-left: 4px;
+}
