@@ -1,7 +1,8 @@
 import { Booking } from "@/types/bookings";
+import { UUID } from "crypto";
 
 export interface CalendarEvent {
-  id: string;
+  id: UUID;
   title: string;
   start: Date;
   end: Date;

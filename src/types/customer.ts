@@ -1,5 +1,7 @@
+import { UUID } from "crypto";
+
 export type Customer = {
-  id: string;
+  id: UUID;
   firstName: string;
   lastName?: string;
   phoneNumber: string;

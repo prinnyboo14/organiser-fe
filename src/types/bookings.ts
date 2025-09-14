@@ -1,8 +1,9 @@
 import { BookingStatusEnum } from "./enums";
 import { Customer } from "./customer";
+import { UUID } from "crypto";
 
 export type Booking = {
-  id: string;
+  id: UUID;
   service: string;
   bookingDate: Date;
   estimatedDuration: number;

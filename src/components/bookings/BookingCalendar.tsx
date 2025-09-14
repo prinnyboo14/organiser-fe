@@ -2,6 +2,10 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import * as enGBModule from "date-fns/locale/en-GB";
 
+import {
+  BookingSchemaType,
+  mapBookingToBookingSchema,
+} from "@/domain/bookings/bookingSchema";
 import { Calendar, View, dateFnsLocalizer } from "react-big-calendar";
 import {
   CalendarEvent,
@@ -11,6 +15,8 @@ import { format, getDay, parse as parseDateFns, startOfWeek } from "date-fns";
 import { useEffect, useState } from "react";
 
 import { Booking } from "@/types/bookings";
+import { BookingDialog } from "./Dialogs/BookingDialog";
+import { useUpdateBooking } from "@/hooks/bookings";
 
 const enGB = (enGBModule as any).default ?? enGBModule;
 const localizer = dateFnsLocalizer({
@@ -30,6 +36,20 @@ export const BookingCalendar = ({ bookings }: Props) => {
   const [view, setView] = useState<View>("week");
   const [date, setDate] = useState(new Date());
   const [filter, setFilter] = useState<"all" | "mot" | "nonMot">("all");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+
+  const { mutate, error } = useUpdateBooking();
+
+  const handleSave = (data: BookingSchemaType) => {
+    if (!selectedBooking) return;
+
+    mutate({
+      id: selectedBooking.id,
+      data,
+    });
+    setOpenDialog(false);
+  };
 
   useEffect(() => {
     if (bookings?.length) {
@@ -50,9 +70,11 @@ export const BookingCalendar = ({ bookings }: Props) => {
   });
 
   const handleSelectEvent = (event: CalendarEvent) => {
-    alert(
-      `Booking for ${event.resource.customer.firstName} ${event.resource.customer.lastName}\nService: ${event.resource.service}\nNotes: ${event.resource.notes}`
-    );
+    // alert(
+    //   `Booking for ${event.resource.customer.firstName} ${event.resource.customer.lastName}\nService: ${event.resource.service}\nNotes: ${event.resource.notes}`
+    // );
+    setSelectedBooking(event.resource);
+    setOpenDialog(true);
   };
 
   return (
@@ -98,6 +120,17 @@ export const BookingCalendar = ({ bookings }: Props) => {
             //borderRadius: "none",
           },
         })}
+      />
+
+      <BookingDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        initialValues={
+          selectedBooking
+            ? mapBookingToBookingSchema(selectedBooking)
+            : undefined
+        }
+        onSave={handleSave}
       />
     </div>
   );
