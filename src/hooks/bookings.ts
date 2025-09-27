@@ -18,8 +18,9 @@ export function useUpdateBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: UUID; data: updateBookingDto }) =>
-      bookingService.updateBookingData(id, data),
+    mutationFn: ({ id, data }: { id: UUID; data: updateBookingDto }) => {
+      return bookingService.updateBookingData(id, data);
+    },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ["bookings"] });
     },

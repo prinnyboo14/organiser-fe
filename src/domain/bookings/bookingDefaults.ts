@@ -1,10 +1,10 @@
 export const defaultBookingValues = {
-  customerName: "",
+  //customerName: "",
   service: "",
-  date: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
-  hours: 0,
-  minutes: 0,
-  isMOT: false,
+  bookingDate: new Date(),
+  //bookingDate: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
+  //isMOT: false,
   notes: "",
+  estimatedDuration: 60,
 };
 // add a type

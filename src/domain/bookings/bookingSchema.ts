@@ -5,6 +5,9 @@ import { Booking } from "@/types/bookings";
 export const bookingSchema = z.object({
   // customerName: z.string().min(1, "Customer name is required"),
   service: z.string().min(1, "Service is required"),
+  bookingDate: z.date(),
+  estimatedDuration: z.number(),
+  // bookingStatus: z.enum(["CONFIRMED", "CANCELLED", "PENDING"]),
   // date: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
   // hours: z.number().min(0).max(24),
   // minutes: z.number().min(0).max(59),
@@ -20,5 +23,7 @@ export const mapBookingToBookingSchema = (
   return {
     service: booking.service,
     notes: booking.notes ?? "",
+    bookingDate: booking.bookingDate,
+    estimatedDuration: booking.estimatedDuration,
   };
 };

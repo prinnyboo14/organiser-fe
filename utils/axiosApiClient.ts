@@ -1,11 +1,5 @@
-import axios from 'axios';
-import type { ResponseType, AxiosRequestConfig } from 'axios';
-
-// type ClientRequestConfig = {
-//   params?: Record<string, unknown>;
-//   paramsSerializer?: (params: Record<string, unknown>) => string;
-//   responseType?: ResponseType;
-// };
+import type { AxiosRequestConfig } from "axios";
+import axios from "axios";
 
 type ClientRequestConfig = AxiosRequestConfig;
 
@@ -22,7 +16,7 @@ function handleError(error: unknown) {
       message: error.message,
     };
   }
-  return { success: false, message: 'Unknown error' };
+  return { success: false, message: "Unknown error" };
 }
 
 export async function get<T>(

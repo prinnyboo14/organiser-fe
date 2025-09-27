@@ -9,13 +9,16 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 
 import CloseIcon from "@mui/icons-material/Close";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DurationPicker } from "@/components/utils/DurationPicker";
 import EditIcon from "@mui/icons-material/Edit";
+import dayjs from "dayjs";
 import { defaultBookingValues } from "@/domain/bookings/bookingDefaults";
 import { red } from "@mui/material/colors";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 interface BookingDialogProps {
@@ -31,15 +34,26 @@ export const BookingDialog = ({
   onSave,
   initialValues,
 }: BookingDialogProps) => {
-  const { register, handleSubmit, reset } = useForm<BookingSchemaType>({
-    resolver: zodResolver(bookingSchema),
-    defaultValues: defaultBookingValues,
-  });
+  const { register, handleSubmit, reset, control } = useForm<BookingSchemaType>(
+    {
+      resolver: zodResolver(bookingSchema),
+      defaultValues: defaultBookingValues,
+    }
+  );
 
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    if (open) reset(initialValues ?? defaultBookingValues);
+    if (open)
+      reset(
+        initialValues
+          ? {
+              ...initialValues,
+              bookingDate: new Date(initialValues.bookingDate),
+              estimatedDuration: initialValues.estimatedDuration ?? 0,
+            }
+          : defaultBookingValues
+      );
   }, [open, initialValues, reset]);
 
   const handleCancel = () => {
@@ -62,7 +76,9 @@ export const BookingDialog = ({
       </div>
       <DialogTitle>Booking</DialogTitle>
       <form
-        onSubmit={handleSubmit(onSave)}
+        onSubmit={handleSubmit((data) => {
+          onSave(data);
+        })}
         className="flex flex-col space-y-4 p-4"
       >
         <DialogContent className="flex flex-col space-y-4">
@@ -83,6 +99,45 @@ export const BookingDialog = ({
               fullWidth
               multiline
               minRows={3}
+            />
+          </div>
+          <div className="bg-gray-50 rounded-md p-2">
+            <Controller
+              name="bookingDate"
+              control={control}
+              render={({ field }) => (
+                <DateTimePicker
+                  label="Booking Date"
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(newValue) =>
+                    field.onChange(newValue?.toDate() ?? null)
+                  }
+                  disabled={!isEditing}
+                  slotProps={{ textField: { fullWidth: true } }}
+                  format="DD/MM/YYYY HH:mm"
+                />
+              )}
+            />
+          </div>
+          <div className="bg-gray-50 rounded-md p-2">
+            <Controller
+              name="estimatedDuration"
+              control={control}
+              render={({ field }) => {
+                const value = field.value ?? 0;
+                const hours = Math.floor(value / 60);
+                const minutes = value % 60;
+                return (
+                  <DurationPicker
+                    hours={hours}
+                    minutes={minutes}
+                    onChange={(hour, minute) =>
+                      field.onChange(hour * 60 + minute)
+                    }
+                    disabled={!isEditing}
+                  />
+                );
+              }}
             />
           </div>
         </DialogContent>

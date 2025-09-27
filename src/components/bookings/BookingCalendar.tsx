@@ -46,8 +46,12 @@ export const BookingCalendar = ({ bookings }: Props) => {
 
     mutate({
       id: selectedBooking.id,
-      data,
+      data: {
+        ...data,
+        bookingDate: data.bookingDate.toISOString(),
+      },
     });
+
     setOpenDialog(false);
   };
 
@@ -70,9 +74,6 @@ export const BookingCalendar = ({ bookings }: Props) => {
   });
 
   const handleSelectEvent = (event: CalendarEvent) => {
-    // alert(
-    //   `Booking for ${event.resource.customer.firstName} ${event.resource.customer.lastName}\nService: ${event.resource.service}\nNotes: ${event.resource.notes}`
-    // );
     setSelectedBooking(event.resource);
     setOpenDialog(true);
   };
@@ -117,7 +118,6 @@ export const BookingCalendar = ({ bookings }: Props) => {
         eventPropGetter={(event) => ({
           style: {
             backgroundColor: event.color,
-            //borderRadius: "none",
           },
         })}
       />

@@ -2,6 +2,7 @@ import "./globals.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
 
+import MUILocalizationProvider from "./MUILocalizationProvider";
 import type { Metadata } from "next";
 import RootClientLayout from "./rootClientLayout";
 
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <RootClientLayout>{children}</RootClientLayout>
+        <MUILocalizationProvider>
+          <RootClientLayout>{children}</RootClientLayout>
+        </MUILocalizationProvider>
       </body>
     </html>
   );
